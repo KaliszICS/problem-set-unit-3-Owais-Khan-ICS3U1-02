@@ -174,7 +174,7 @@ void ExampleTest1() {
 
 	@Test
 	void test2_13() {
-		assertEquals("john@.com: Invalid: No dot in domain\n.@.: Invalid: Starts or ends with dot",
+		assertEquals("john@.com: Invalid: Domain cannot start with a dot\n.@.: Invalid: Starts or ends with dot",
 			ProblemSet.emailValidator("john@.com, .@."));
 	}
 }

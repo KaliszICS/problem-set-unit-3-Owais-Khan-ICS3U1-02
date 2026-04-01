@@ -69,6 +69,9 @@ public class ProblemSet {
 		if (!domain.contains(".")) {
 			return email + ": Invalid: No dot in domain";
 		}
+		if (domain.startsWith(".")) {
+			return email + ": Invalid: Domain cannot start with a dot";
+		}
 
 		// Get the index of the last "." in domain to parse the domain extension. 
 		int domainDotIndex = domain.lastIndexOf(".");
@@ -110,17 +113,21 @@ public class ProblemSet {
 			
 
 			// Get 2 emails.
-			/* 
+			
+			/*
 			boolean email1Exists = input.substring(0, input.indexOf(',')).length() > 0;
 			boolean email2Exists = input.substring(' ').length() > 1;
 
-			if (email1Exists) {
+			if (!email1Exists) {
 				String input1 = "";
+			}
+			if (!email2Exists) {
+				String input2 = "";
 			}
 			*/
 			
 			String input1 = input.substring(0, input.indexOf(','));
-			String input2 = input.substring(input.indexOf(' ')+1);
+			String input2 = input.substring(input.indexOf(",")+2);
 
 			return emailValidatorHelper(input1) + "\n" + emailValidatorHelper(input2);  // 2 emails
 		} else {
