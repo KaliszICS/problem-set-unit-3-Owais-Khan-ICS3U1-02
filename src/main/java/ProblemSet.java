@@ -101,19 +101,26 @@ public class ProblemSet {
 	public static String emailValidator(String input) {
 
 		// Check if the input contains 1 ", ".
-		boolean containsOneComma = input.contains(", ") && input.indexOf(", ") == input.lastIndexOf(", ");
+		boolean containsOneComma = input.contains(",") && input.indexOf(",") == input.lastIndexOf(",");
 
 		// Split the input into 2 emails if a comma is present, otherwise assume it is 1.
 		if (containsOneComma) {
 
 			// Handle edge cases where user may use invalid format.
-			if (input.length()<4) {
-				return "Bro are you even tring to type an email?";
-			}
+			
 
 			// Get 2 emails.
+			/* 
+			boolean email1Exists = input.substring(0, input.indexOf(',')).length() > 0;
+			boolean email2Exists = input.substring(' ').length() > 1;
+
+			if (email1Exists) {
+				String input1 = "";
+			}
+			*/
+			
 			String input1 = input.substring(0, input.indexOf(','));
-			String input2 = input.substring(input.indexOf(',')+2);
+			String input2 = input.substring(input.indexOf(' ')+1);
 
 			return emailValidatorHelper(input1) + "\n" + emailValidatorHelper(input2);  // 2 emails
 		} else {
