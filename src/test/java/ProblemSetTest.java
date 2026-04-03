@@ -120,13 +120,13 @@ void ExampleTest1() {
 
 	@Test
 	void test2_4() {
-		assertEquals(": Invalid: Missing @\n: Invalid: Missing @",
+		assertEquals(": Invalid: Missing @",
 			ProblemSet.emailValidator(""));
 	}
 
 	@Test
 	void test2_5() {
-		assertEquals(",: Invalid: Missing @\n,: Invalid: Missing @",
+		assertEquals(",,: Invalid: Missing @",
 			ProblemSet.emailValidator(",,"));
 	}
 
@@ -174,7 +174,56 @@ void ExampleTest1() {
 
 	@Test
 	void test2_13() {
-		assertEquals("john@.com: Invalid: Domain cannot start with a dot\n.@.: Invalid: Starts or ends with dot",
+		assertEquals("john@.com: Invalid: Domain starts with a dot\n.@.: Invalid: Starts or ends with dot",
 			ProblemSet.emailValidator("john@.com, .@."));
 	}
+
+	@Test
+	void test3_1() {
+		assertEquals(".email@gmail.com: Valid (Gmail normalized) | Local: .email | Domain: gmail.com",
+			ProblemSet.emailValidator(".email@gmail.com"));
+	}
+
+	@Test
+	void test3_2() {
+		assertEquals("++++@gmail.com: Invalid: Local part too short",
+			ProblemSet.emailValidator("++++@gmail.com"));
+	}
+
+	@Test
+	void test3_3() {
+		assertEquals(".__._@gmail.com: Invalid: Local part too short",
+			ProblemSet.emailValidator(".__._@gmail.com"));
+	}
+
+	@Test
+	void test3_4() {
+		assertEquals("john.doe+test@gmail.com: Valid (Gmail normalized) | Local: john.doe+test | Domain: gmail.com",
+			ProblemSet.emailValidator("john.doe+test@gmail.com"));
+	}
+
+	@Test
+	void test3_5() {
+		assertEquals(".john@yahoo.com: Invalid: Starts or ends with dot",
+			ProblemSet.emailValidator(".john@yahoo.com"));
+	}
+
+	@Test
+	void test3_6() {
+		assertEquals("a.................................................................a@gmail.com: Valid (Gmail normalized) | Local: a.................................................................a | Domain: gmail.com",
+			ProblemSet.emailValidator("a.................................................................a@gmail.com"));
+	}
+
+	@Test
+	void test3_7() {
+		assertEquals(
+			".email@gmail.com: Valid (Gmail normalized) | Local: .email | Domain: gmail.com\n++++@gmail.com: Invalid: Local part too short",
+			ProblemSet.emailValidator(".email@gmail.com, ++++@gmail.com"));
+	}
+
+	@Test
+	void test3_8() {
+		assertEquals("_+_+_@gmail.com: Invalid: Local part too short",
+			ProblemSet.emailValidator("_+_+_@gmail.com"));
+}
 }
