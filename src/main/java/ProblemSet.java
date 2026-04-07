@@ -21,18 +21,6 @@ public class ProblemSet {
 		System.out.println(emailValidator(userInput));
 	}
 
-	// Check if a string contains only letters.
-	public static boolean containsOnlyLetters(String string) {
-		if (string.length() == 0) {
-			return true;
-		}
-		String firstChar = string.substring(0, 1);
-		if (firstChar.toLowerCase() == firstChar.toUpperCase()) {
-			return false;
-		}
-		return containsOnlyLetters(string.substring(1));
-	}
-
 	// This function validates the email by applying the basic rules and then the exceptions.
 	public static String emailValidatorHelper(String email) {
 
@@ -43,7 +31,7 @@ public class ProblemSet {
 		}
 
 		// Ensure there is exactly one '@' symbol.
-		if (!(email.indexOf("@") == email.lastIndexOf("@"))) {
+		if (email.indexOf("@") != email.lastIndexOf("@")) {
 			return email + ": Invalid: Multiple @";
 		}	
 
@@ -95,10 +83,6 @@ public class ProblemSet {
 
 		if (domainExtension.length() < 2 || domainExtension.length() > 6) {
 			return email + ": Invalid: Invalid domain extension length";
-		}
-
-		if (!containsOnlyLetters(domainExtension)){
-			return email + ": Invalid: Domain extension contains non-letters";
 		}
 
 		// Exception B doen not allow the domain to have the characters '+' and '_'.
