@@ -2,9 +2,9 @@
 	* File: Problem Set Unit 3: Email Validator and Parser
 	* Author: Owais Ali Khan
 	* Date Created: March 29, 2026
-	* Date Last Modified: March 31, 2026
+	* Date Last Modified: April 7, 2026
 
-	This program takes in 1 or 2 emails seperated by a comma and validates them based on a set of rules.
+	This program takes in 1 or 2 emails seperated by a comma and validates them based on a set of rules and exceptions.
 	*/
 
 
@@ -21,7 +21,7 @@ public class ProblemSet {
 		System.out.println(emailValidator(userInput));
 	}
 
-	
+	// Check if a string contains only letters.
 	public static boolean containsOnlyLetters(String string) {
 		if (string.length() == 0) {
 			return true;
@@ -33,37 +33,36 @@ public class ProblemSet {
 		return containsOnlyLetters(string.substring(1));
 	}
 
-	// This function validates the email by applying the basic rules and then the exeptions.
+	// This function validates the email by applying the basic rules and then the exceptions.
 	public static String emailValidatorHelper(String email) {
 
-		// Exeption C applies to emails that have the domain "gmail.com" so we will add "(Gmail normalized)" to the final output.
-		String gmailNormalized = "";
-		boolean gmailDomain = false;
+		String gmailNormalized = ""; // Message to concatenate to final output if email ends in "gmail.com"
 
 		if (!(email.contains("@"))) {
 			return email + ": Invalid: Missing @";
 		}
 
-		// Compare the first and last index of @, if they differ, then there is more than 1.
+		// Ensure there is exactly one '@' symbol.
 		if (!(email.indexOf("@") == email.lastIndexOf("@"))) {
 			return email + ": Invalid: Multiple @";
 		}	
 
-		int atIndex = email.indexOf("@");  // Take the index of the @ so we can parse the local part and the domain.
+		int atIndex = email.indexOf("@");  // Find position of '@' to split local part and domain
 		String local;
 
-
+		// Gmails ingnore "._+" in the local part
 		if (email.endsWith("@gmail.com")) {
 			gmailNormalized = " (Gmail normalized)";
-			gmailDomain = true;
-			local = email.substring(0, atIndex);
-			local = local.replaceAll("\\.", "").replaceAll("\\+", "").replaceAll("_", "");
-			System.out.println(local);
+			local = email.substring(0, atIndex); // Take the local part (everything before @)
+			local = local.replaceAll("\\.", "")
+						 .replaceAll("\\+", "")
+						 .replaceAll("_", "");
 		} else {
 			local = email.substring(0, atIndex);
 		}
 
-		if (email.startsWith(".") && !gmailDomain || email.endsWith(".")) {
+		// Use local to check for leading "." in case it was normalized.
+		if (local.startsWith(".") || email.endsWith(".")) {
 			return email + ": Invalid: Starts or ends with dot";
 		}
 
@@ -78,8 +77,9 @@ public class ProblemSet {
 			return email + ": Invalid: Local part too short";
 		}
 
-		String localRaw = email.substring(0, atIndex);  // Take the local part (everything before @)
-		String domain = email.substring(atIndex+1);  // Take the doamin (everthing after @)
+		// localRaw is used to return the unnormalized local in case of exception C
+		String localRaw = email.substring(0, atIndex);  
+		String domain = email.substring(atIndex + 1);  // Take the doamin (everthing after @)
 
 		if (!domain.contains(".")) {
 			return email + ": Invalid: No dot in domain";
@@ -90,20 +90,20 @@ public class ProblemSet {
 
 		// Get the index of the last "." in domain to parse the domain extension. 
 		int domainDotIndex = domain.lastIndexOf(".");
-		String domainExtention = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last ".")
+		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last ".")
 
 
-		if (domainExtention.length() < 2 || domainExtention.length() > 6) {
+		if (domainExtension.length() < 2 || domainExtension.length() > 6) {
 			return email + ": Invalid: Invalid domain extension length";
 		}
 
-		if (!containsOnlyLetters(domainExtention)){
+		if (!containsOnlyLetters(domainExtension)){
 			return email + ": Invalid: Domain extension contains non-letters";
 		}
 
-		// Exeption B only allows the local part to have the characters "+" and "_".
+		// Exception B doen not allow the domain to have the characters "+" and "_".
 		if (domain.contains("+") || domain.contains("_")) {
-			return email + ": Invalid: Domain contains \'+\' and/or \'_\' ";
+			return email + ": Invalid: Domain contains invalid characters (+ and _)";
 		}
 		
 		// Final output.
@@ -113,17 +113,16 @@ public class ProblemSet {
 	// This function parses the input into 1 or 2 emails depending on the user input.
 	public static String emailValidator(String input) {
 
-		// Check if the input contains 1 ", ".
+		// Check if the input contains ", " seperating the emails.
 		int commaIndex = input.indexOf(", ");
-		//boolean oneComma = input.indexOf(", ") == input.lastIndexOf(", ");
 
-		// Split the input into 2 emails if a comma is present, otherwise assume it is 1.
+		// If there is no ", " then assume it is 1 email, else split it into 2.
 		if (commaIndex == -1) {
 			return emailValidatorHelper(input);  // 1 email
 	
 		} else {
 			String input1 = input.substring(0, commaIndex);
-			String input2 = input.substring(commaIndex+2);
+			String input2 = input.substring(commaIndex + 2);
 			return emailValidatorHelper(input1) + "\n" + emailValidatorHelper(input2);  // 2 emails
 		} 
 	}
