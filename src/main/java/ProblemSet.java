@@ -37,17 +37,15 @@ public class ProblemSet {
 		}	
 
 		int atIndex = email.indexOf("@");  // Find position of '@' to split local part and domain.
-		String local;
+		String local = email.substring(0, atIndex);  // Take the local part (everything before @).
+		String localRaw = local;  // localRaw is used to return the unnormalized local in case of exception C.
 
-		// Gmails ingnore "._+" in the local part.
+		// Gmails ignore "._+" in the local part.
 		if (email.endsWith("@gmail.com")) {
 			gmailNormalized = " (Gmail normalized)";
-			local = email.substring(0, atIndex); // Take the local part (everything before @).
 			local = local.replaceAll("\\.", "")
 						 .replaceAll("\\+", "")
 						 .replaceAll("_", "");
-		} else {
-			local = email.substring(0, atIndex);
 		}
 
 		// Use local to check for leading '.', '_' or '+' in case it was normalized.
@@ -58,7 +56,7 @@ public class ProblemSet {
 		boolean hasInvalidEnd = email.endsWith(".");
 
 		if (hasInvalidStart || hasInvalidEnd) {
-			return email + ": Invalid: Starts or ends with dot";  // '+' and '_' follow the same rules as '.'.
+			return email + ": Invalid: Starts or ends with dot";  // '+' and '_' are treated as '.'.
 		}
 
 		if (email.contains(" ")) {
@@ -72,8 +70,6 @@ public class ProblemSet {
 			return email + ": Invalid: Local part too short";
 		}
 
-		// localRaw is used to return the unnormalized local in case of exception C.
-		String localRaw = email.substring(0, atIndex);  
 		String domain = email.substring(atIndex + 1);  // Take the domain (everthing after @).
 
 		if (!domain.contains(".")) {
@@ -87,9 +83,11 @@ public class ProblemSet {
 		int domainDotIndex = domain.lastIndexOf(".");
 		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last '.').
 
-
-		if (domainExtension.length() < 2 || domainExtension.length() > 6) {
-			return email + ": Invalid: Invalid domain extension length";
+		if (domainExtension.length() < 2) {
+    		return email + ": Invalid: Domain extension too short";
+		}
+		if (domainExtension.length() > 6) {
+			return email + ": Invalid: Domain extension too long";
 		}
 
 		// Exception B doen not allow the domain to have the characters '+' and '_'.

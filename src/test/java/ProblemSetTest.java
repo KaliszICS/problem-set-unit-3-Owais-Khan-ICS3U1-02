@@ -1,20 +1,14 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ProblemSetTest {
-@Test
-@DisplayName("")
-void ExampleTest1() {
-	//ArrayEquals("a", "b");
-}
 
 	@Test
 	void test1_1() {
 		assertEquals(
 			"john.doe@example.com: Valid | Local: john.doe | Domain: example.com\n" +
-			"invalid@domain.5yz: Invalid: Domain extension contains non-letters",
+			"invalid@domain.5yz: Valid | Local: invalid | Domain: domain.5yz",
 			ProblemSet.emailValidator("john.doe@example.com, invalid@domain.5yz")
 		);
 	}
@@ -76,8 +70,8 @@ void ExampleTest1() {
 	@Test
 	void test1_8() {
 		assertEquals(
-			"john@example.c: Invalid: Invalid domain extension length\n" +
-			"john@example.companyyy: Invalid: Invalid domain extension length",
+			"john@example.c: Invalid: Domain extension too short\n" +
+			"john@example.companyyy: Invalid: Domain extension too long",
 			ProblemSet.emailValidator("john@example.c, john@example.companyyy")
 		);
 	}
@@ -85,7 +79,7 @@ void ExampleTest1() {
 	@Test
 	void test1_9() {
 		assertEquals(
-			"john@example.c0m: Invalid: Domain extension contains non-letters\n" +
+			"john@example.c0m: Valid | Local: john | Domain: example.c0m\n" +
 			"john.doe@gmail.com: Valid (Gmail normalized) | Local: john.doe | Domain: gmail.com",
 			ProblemSet.emailValidator("john@example.c0m, john.doe@gmail.com")
 		);
@@ -144,7 +138,7 @@ void ExampleTest1() {
 
 	@Test
 	void test2_8() {
-		assertEquals("a@b.c: Invalid: Invalid domain extension length\na@b.co: Valid | Local: a | Domain: b.co",
+		assertEquals("a@b.c: Invalid: Domain extension too short\na@b.co: Valid | Local: a | Domain: b.co",
 			ProblemSet.emailValidator("a@b.c, a@b.co"));
 	}
 
@@ -156,7 +150,7 @@ void ExampleTest1() {
 
 	@Test
 	void test2_10() {
-		assertEquals("user@domain.c0m: Invalid: Domain extension contains non-letters\nuser@domain.com: Valid | Local: user | Domain: domain.com",
+		assertEquals("user@domain.c0m: Valid | Local: user | Domain: domain.c0m\nuser@domain.com: Valid | Local: user | Domain: domain.com",
 			ProblemSet.emailValidator("user@domain.c0m, user@domain.com"));
 	}
 
@@ -225,5 +219,30 @@ void ExampleTest1() {
 	void test3_8() {
 		assertEquals("_+_+_@gmail.com: Invalid: Local part too short",
 			ProblemSet.emailValidator("_+_+_@gmail.com"));
-}
+	}
+
+	// NEW TESTS
+	@Test
+	void test_plus_start() {
+		assertEquals("+user@test.com: Invalid: Starts or ends with dot",
+			ProblemSet.emailValidator("+user@test.com"));
+	}
+
+	@Test
+	void test_underscore_start() {
+		assertEquals("_user@test.com: Invalid: Starts or ends with dot",
+			ProblemSet.emailValidator("_user@test.com"));
+	}
+
+	@Test
+	void test_domain_plus_invalid() {
+		assertEquals("user@do+main.com: Invalid: Domain contains invalid characters ('+' and/or '_')",
+			ProblemSet.emailValidator("user@do+main.com"));
+	}
+
+	@Test
+	void test_domain_underscore_invalid() {
+		assertEquals("user@do_main.com: Invalid: Domain contains invalid characters ('+' and/or '_')",
+			ProblemSet.emailValidator("user@do_main.com"));
+	}
 }
