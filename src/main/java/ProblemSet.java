@@ -36,7 +36,7 @@ public class ProblemSet {
 	// This function validates the email by applying the basic rules and then the exceptions.
 	public static String emailValidatorHelper(String email) {
 
-		String gmailNormalized = ""; // Message to concatenate to final output if email ends in "gmail.com"
+		String gmailNormalized = ""; // Message to concatenate to final output if email ends in "gmail.com".
 
 		if (!(email.contains("@"))) {
 			return email + ": Invalid: Missing @";
@@ -47,13 +47,13 @@ public class ProblemSet {
 			return email + ": Invalid: Multiple @";
 		}	
 
-		int atIndex = email.indexOf("@");  // Find position of '@' to split local part and domain
+		int atIndex = email.indexOf("@");  // Find position of '@' to split local part and domain.
 		String local;
 
-		// Gmails ingnore "._+" in the local part
+		// Gmails ingnore "._+" in the local part.
 		if (email.endsWith("@gmail.com")) {
 			gmailNormalized = " (Gmail normalized)";
-			local = email.substring(0, atIndex); // Take the local part (everything before @)
+			local = email.substring(0, atIndex); // Take the local part (everything before @).
 			local = local.replaceAll("\\.", "")
 						 .replaceAll("\\+", "")
 						 .replaceAll("_", "");
@@ -77,9 +77,9 @@ public class ProblemSet {
 			return email + ": Invalid: Local part too short";
 		}
 
-		// localRaw is used to return the unnormalized local in case of exception C
+		// localRaw is used to return the unnormalized local in case of exception C.
 		String localRaw = email.substring(0, atIndex);  
-		String domain = email.substring(atIndex + 1);  // Take the doamin (everthing after @)
+		String domain = email.substring(atIndex + 1);  // Take the domain (everthing after @).
 
 		if (!domain.contains(".")) {
 			return email + ": Invalid: No dot in domain";
@@ -88,9 +88,9 @@ public class ProblemSet {
 			return email + ": Invalid: Domain starts with a dot";
 		}
 
-		// Get the index of the last "." in domain to parse the domain extension. 
+		// Find the position of the last "." in domain to parse the domain extension. 
 		int domainDotIndex = domain.lastIndexOf(".");
-		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last ".")
+		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last ".").
 
 
 		if (domainExtension.length() < 2 || domainExtension.length() > 6) {
@@ -101,9 +101,9 @@ public class ProblemSet {
 			return email + ": Invalid: Domain extension contains non-letters";
 		}
 
-		// Exception B doen not allow the domain to have the characters "+" and "_".
+		// Exception B doen not allow the domain to have the characters '+' and '_'.
 		if (domain.contains("+") || domain.contains("_")) {
-			return email + ": Invalid: Domain contains invalid characters (+ and _)";
+			return email + ": Invalid: Domain contains invalid characters (\'+\' and/or \'_\')";
 		}
 		
 		// Final output.
