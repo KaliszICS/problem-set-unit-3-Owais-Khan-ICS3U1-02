@@ -4,7 +4,8 @@
 	* Date Created: March 29, 2026
 	* Date Last Modified: April 7, 2026
 
-	This program takes in 1 or 2 emails seperated by a comma and validates them based on a set of rules and exceptions.
+	This program takes in 1 or 2 emails seperated by a comma and space then validates 
+	them based on a set of rules and exceptions.
 	*/
 
 
@@ -49,9 +50,15 @@ public class ProblemSet {
 			local = email.substring(0, atIndex);
 		}
 
-		// Use local to check for leading "." in case it was normalized.
-		if (local.startsWith(".") || email.endsWith(".")) {
-			return email + ": Invalid: Starts or ends with dot";
+		// Use local to check for leading '.', '_' or '+' in case it was normalized.
+		boolean hasInvalidStart = local.startsWith(".") 
+		|| local.startsWith("+") 
+		|| local.startsWith("_");
+
+		boolean hasInvalidEnd = email.endsWith(".");
+
+		if (hasInvalidStart || hasInvalidEnd) {
+			return email + ": Invalid: Starts or ends with dot";  // '+' and '_' follow the same rules as '.'.
 		}
 
 		if (email.contains(" ")) {
@@ -76,9 +83,9 @@ public class ProblemSet {
 			return email + ": Invalid: Domain starts with a dot";
 		}
 
-		// Find the position of the last "." in domain to parse the domain extension. 
+		// Find the position of the last '.' in domain to parse the domain extension. 
 		int domainDotIndex = domain.lastIndexOf(".");
-		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last ".").
+		String domainExtension = domain.substring(domainDotIndex+1);  // Get the domain extension (everything after the last '.').
 
 
 		if (domainExtension.length() < 2 || domainExtension.length() > 6) {
